@@ -33,8 +33,9 @@
   --mono:"IBM Plex Mono",monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;overflow-x:hidden}
 body{
+  overflow-x:hidden;
   background:var(--tarmac);
   color:var(--ink);
   font-family:var(--body);
@@ -155,7 +156,7 @@ a:hover{text-decoration:underline;text-underline-offset:3px}
 .now-card{
   margin-top:28px;max-width:660px;
   background:linear-gradient(135deg,rgba(26,60,94,.35),rgba(20,26,34,.7));
-  border:1px solid var(--navy-soft);border-left:3px solid var(--purple);
+  border:1px solid var(--navy-soft);
   border-radius:12px;padding:18px 20px;
 }
 .now-card .s-label{color:var(--purple);margin-bottom:4px}
@@ -254,6 +255,13 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
   .sector{padding:13px 10px 12px}
   .s-sub{font-size:11px}
   .c-row{grid-template-columns:1fr;gap:2px;padding:13px 0}
+}
+@media (max-width:400px){
+  .wrap{padding:0 18px}
+  .nav-links{gap:9px}
+  .nav-links a{font-size:9px;letter-spacing:.05em}
+  .hero h1{letter-spacing:0}
+  .chip{padding:7px 11px;font-size:10.5px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
