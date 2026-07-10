@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anshul R. Shetty — Motorsport Engineer</title>
+<meta name="description" content="Anshul R. Shetty — MSc Motorsport Engineering, Oxford Brookes University. Vehicle dynamics, lap time simulation, telemetry analysis and race engineering. Available October 2026.">
+<meta name="theme-color" content="#0E1116">
+<meta property="og:title" content="Anshul R. Shetty — Motorsport Engineer">
+<meta property="og:description" content="Vehicle dynamics · Simulation · Race engineering. MSc Motorsport Engineering at Oxford Brookes. Patent-pending tyre control system, F1 lap time simulation dissertation, telemetry ML platform.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%231A3C5E'/%3E%3Cpath d='M20 46 L32 16 L44 46' fill='none' stroke='%23B18CFF' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --tarmac:#0E1116;        /* page background */
+  --pitlane:#141A22;       /* card surface */
+  --navy:#1A3C5E;          /* brand navy from CV — borders & tints */
+  --navy-soft:rgba(26,60,94,.45);
+  --purple:#B18CFF;        /* purple sector — fastest */
+  --purple-deep:#7C5CE0;
+  --green:#3DDC97;         /* green flag — availability */
+  --brake:#E5484D;         /* brake trace only */
+  --ink:#E9ECF2;
+  --ink-dim:#9AA5B4;
+  --ink-faint:#5D6979;
+  --line:rgba(155,175,205,.14);
+  --disp:"Barlow Condensed",sans-serif;
+  --body:"Barlow",sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--tarmac);
+  color:var(--ink);
+  font-family:var(--body);
+  font-size:17px;
+  line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--purple-deep);color:#fff}
+a{color:var(--purple);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+:focus-visible{outline:2px solid var(--purple);outline-offset:3px;border-radius:2px}
+
+.wrap{max-width:1020px;margin:0 auto;padding:0 clamp(20px,5vw,44px)}
+
+/* ============ NAV ============ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:rgba(14,17,22,.82);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-name{font-family:var(--disp);font-weight:700;font-size:19px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink)}
+.nav-name:hover{text-decoration:none;color:var(--purple)}
+.nav-links{display:flex;gap:clamp(14px,3vw,28px);list-style:none}
+.nav-links a{
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--ink-dim);padding:6px 2px;border-bottom:2px solid transparent;
+}
+.nav-links a:hover{color:var(--purple);text-decoration:none;border-bottom-color:var(--purple)}
+
+/* ============ HERO ============ */
+.hero{padding:calc(60px + clamp(56px,10vh,110px)) 0 clamp(48px,8vh,84px)}
+.eyebrow{
+  font-family:var(--mono);font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:18px;
+}
+.hero h1{
+  font-family:var(--disp);font-weight:700;text-transform:uppercase;
+  font-size:clamp(3.5rem,13vw,7.6rem);
+  line-height:.92;letter-spacing:.005em;
+}
+.hero h1 .thin{font-weight:500;color:var(--ink-dim)}
+.hero-sub{
+  max-width:620px;margin-top:22px;color:var(--ink-dim);font-size:clamp(1rem,2.4vw,1.15rem);
+}
+.hero-sub strong{color:var(--ink);font-weight:600}
+
+/* telemetry trace */
+.telemetry{margin:34px 0 6px;position:relative}
+.telemetry svg{width:100%;height:96px;display:block}
+.trace{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.trace.throttle{stroke:var(--green);opacity:.9}
+.trace.brake{stroke:var(--brake);opacity:.55}
+.trace-grid{stroke:rgba(155,175,205,.10);stroke-width:1;stroke-dasharray:2 6}
+.trace-key{
+  display:flex;gap:18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-faint);margin-top:8px;
+}
+.trace-key i{display:inline-block;width:14px;height:2px;margin-right:7px;vertical-align:middle;border-radius:2px}
+.k-thr i{background:var(--green)} .k-brk i{background:var(--brake)}
+@keyframes draw{to{stroke-dashoffset:0}}
+.animate .trace{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 2.4s cubic-bezier(.4,0,.2,1) forwards}
+.animate .trace.brake{animation-delay:.35s}
+
+/* sector board */
+.sectors{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+  background:var(--line);border:1px solid var(--line);border-radius:12px;
+  overflow:hidden;margin-top:30px;
+}
+.sector{background:var(--pitlane);padding:16px 14px 14px}
+.s-label{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:6px}
+.s-value{display:block;font-family:var(--disp);font-weight:700;font-size:clamp(1.55rem,5vw,2.3rem);line-height:1;color:var(--purple)}
+.s-sub{display:block;font-size:12.5px;color:var(--ink-dim);margin-top:6px;line-height:1.45}
+
+/* chips + buttons */
+.chip-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.chip{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;
+  border:1px solid var(--line);border-radius:999px;padding:8px 14px;color:var(--ink-dim);
+  background:rgba(20,26,34,.6);
+}
+.chip .dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green)}
+.chip.ip{border-color:rgba(177,140,255,.4);color:var(--purple)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.chip .dot{animation:pulse 2.4s ease-in-out infinite}
+
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--disp);font-weight:600;font-size:17px;letter-spacing:.08em;text-transform:uppercase;
+  padding:13px 24px;border-radius:9px;border:1px solid transparent;cursor:pointer;
+  transition:transform .15s ease,background .15s ease,border-color .15s ease;
+}
+.btn:hover{text-decoration:none;transform:translateY(-1px)}
+.btn-primary{background:var(--purple);color:#12081F}
+.btn-primary:hover{background:#C4A6FF}
+.btn-ghost{background:transparent;color:var(--ink);border-color:rgba(155,175,205,.35)}
+.btn-ghost:hover{border-color:var(--purple);color:var(--purple)}
+
+/* ============ SECTIONS ============ */
+.section{padding:clamp(56px,9vh,96px) 0;border-top:1px solid var(--line);scroll-margin-top:72px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:34px}
+.sec-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-faint);white-space:nowrap}
+.sec-head h2{
+  font-family:var(--disp);font-weight:700;text-transform:uppercase;
+  font-size:clamp(2rem,6.5vw,3rem);line-height:1;
+}
+.sec-head .rule{flex:1;height:1px;background:var(--line);transform:translateY(-6px)}
+
+.prose{max-width:660px;color:var(--ink-dim)}
+.prose p+p{margin-top:16px}
+.prose strong{color:var(--ink);font-weight:600}
+
+.now-card{
+  margin-top:28px;max-width:660px;
+  background:linear-gradient(135deg,rgba(26,60,94,.35),rgba(20,26,34,.7));
+  border:1px solid var(--navy-soft);border-left:3px solid var(--purple);
+  border-radius:12px;padding:18px 20px;
+}
+.now-card .s-label{color:var(--purple);margin-bottom:4px}
+.now-card p{color:var(--ink-dim);font-size:15px}
+
+/* ============ PROJECTS ============ */
+.proj{
+  background:var(--pitlane);border:1px solid var(--line);border-radius:14px;
+  padding:clamp(20px,4vw,30px);margin-bottom:20px;
+  transition:border-color .2s ease,transform .2s ease;
+}
+.proj:hover{border-color:rgba(177,140,255,.45);transform:translateY(-2px)}
+.proj-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.tag{
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 11px;border-radius:6px;border:1px solid var(--line);color:var(--ink-dim);
+}
+.tag.live{color:var(--green);border-color:rgba(61,220,151,.35)}
+.tag.purple{color:var(--purple);border-color:rgba(177,140,255,.4)}
+.proj h3{font-family:var(--disp);font-weight:600;text-transform:uppercase;font-size:clamp(1.4rem,4.5vw,1.85rem);line-height:1.1;letter-spacing:.02em}
+.proj p{color:var(--ink-dim);margin-top:12px;max-width:700px;font-size:16px}
+.metrics{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.metric{
+  font-family:var(--mono);font-size:12px;color:var(--ink);
+  background:rgba(26,60,94,.35);border:1px solid var(--navy-soft);
+  border-radius:6px;padding:6px 11px;
+}
+.metric b{color:var(--purple);font-weight:500}
+.stack{margin-top:14px;font-family:var(--mono);font-size:11.5px;letter-spacing:.05em;color:var(--ink-faint)}
+
+/* ============ QUALIFICATIONS ============ */
+.edu{border-left:2px solid var(--navy-soft);margin-left:6px;padding-left:26px;position:relative;max-width:720px}
+.edu-item{position:relative;padding-bottom:30px}
+.edu-item:last-child{padding-bottom:6px}
+.edu-item::before{
+  content:"";position:absolute;left:-33px;top:7px;width:12px;height:12px;border-radius:50%;
+  background:var(--tarmac);border:2px solid var(--purple);
+}
+.edu-when{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.edu-item h3{font-family:var(--disp);font-weight:600;text-transform:uppercase;font-size:1.45rem;margin-top:4px;letter-spacing:.02em}
+.edu-where{color:var(--ink-dim);font-size:15px;margin-top:2px}
+.edu-note{color:var(--ink-dim);font-size:14px;margin-top:8px;line-height:1.55}
+.edu-note b{color:var(--purple);font-weight:600}
+
+.subhead{
+  font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-faint);margin:44px 0 18px;display:flex;align-items:center;gap:14px;
+}
+.subhead::after{content:"";flex:1;height:1px;background:var(--line)}
+
+.honours{list-style:none;max-width:720px}
+.honours li{
+  display:flex;gap:14px;padding:12px 0;border-bottom:1px solid var(--line);
+  color:var(--ink-dim);font-size:15.5px;align-items:baseline;
+}
+.honours li::before{content:"▸";color:var(--purple);font-size:13px;flex-shrink:0}
+.honours b{color:var(--ink);font-weight:600}
+.honours .mono{font-family:var(--mono);font-size:12.5px;color:var(--ink-faint)}
+
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.skill-group{background:var(--pitlane);border:1px solid var(--line);border-radius:12px;padding:20px}
+.skill-group h4{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--purple);margin-bottom:14px;font-weight:500;
+}
+.skill-tags{display:flex;flex-wrap:wrap;gap:8px}
+.skill-tags span{
+  font-family:var(--mono);font-size:12px;color:var(--ink-dim);
+  border:1px solid var(--line);border-radius:6px;padding:5px 10px;
+}
+
+/* ============ CONTACT ============ */
+.contact-grid{display:grid;grid-template-columns:1fr;gap:0;max-width:720px}
+.c-row{
+  display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:baseline;
+  padding:15px 0;border-bottom:1px solid var(--line);
+}
+.c-row dt{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint)}
+.c-row dd{font-size:clamp(1rem,3vw,1.15rem);color:var(--ink);word-break:break-word}
+.c-row dd a{color:var(--ink)}
+.c-row dd a:hover{color:var(--purple)}
+
+/* ============ FOOTER ============ */
+footer{border-top:1px solid var(--line);padding:34px 0 44px}
+.foot-inner{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center}
+.foot-inner p{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;color:var(--ink-faint)}
+
+/* ============ REVEAL ============ */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media (max-width:560px){
+  .nav-name{font-size:16px}
+  .nav-links{gap:12px}
+  .nav-links a{font-size:10px;letter-spacing:.08em}
+  .sector{padding:13px 10px 12px}
+  .s-sub{font-size:11px}
+  .c-row{grid-template-columns:1fr;gap:2px;padding:13px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none;transition:none}
+  .animate .trace{animation:none;stroke-dasharray:none}
+  .chip .dot{animation:none}
+  .btn:hover,.proj:hover{transform:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Main">
+  <div class="wrap nav-inner">
+    <a class="nav-name" href="#top">Anshul R. Shetty</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#qualifications">Qualifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero wrap" id="top">
+  <p class="eyebrow">Vehicle Dynamics · Simulation · Race Engineering</p>
+  <h1>Anshul R.<br>Shetty <span class="thin">/ Motorsport Engineer</span></h1>
+  <p class="hero-sub">MSc Motorsport Engineering candidate at <strong>Oxford Brookes University</strong>, working at the point where telemetry becomes a setup decision — lap time simulation, tyre modelling, and data-driven performance engineering.</p>
+
+  <div class="telemetry animate" aria-hidden="true">
+    <svg viewBox="0 0 1200 110" preserveAspectRatio="none">
+      <line class="trace-grid" x1="0" y1="18" x2="1200" y2="18"/>
+      <line class="trace-grid" x1="0" y1="55" x2="1200" y2="55"/>
+      <line class="trace-grid" x1="0" y1="92" x2="1200" y2="92"/>
+      <path class="trace throttle" pathLength="1" d="M0,92 L70,16 L200,14 L245,88 L285,90 L330,16 L470,14 L520,64 L565,60 L615,15 L760,14 L805,92 L860,94 L915,16 L1050,14 L1105,58 L1200,15"/>
+      <path class="trace brake" pathLength="1" d="M0,104 L190,104 L228,30 L262,104 L495,104 L528,52 L560,104 L740,104 L778,26 L818,104 L1035,104 L1072,48 L1108,104 L1200,104"/>
+    </svg>
+    <div class="trace-key">
+      <span class="k-thr"><i></i>Throttle</span>
+      <span class="k-brk"><i></i>Brake</span>
+      <span>ACC · MoTeC export · G923 rig</span>
+    </div>
+  </div>
+
+  <div class="sectors" role="list" aria-label="Key results">
+    <div class="sector" role="listitem">
+      <span class="s-label">Sim correlation</span>
+      <span class="s-value">&lt;2%</span>
+      <span class="s-sub">lap time error target, AVL VSM vs real telemetry</span>
+    </div>
+    <div class="sector" role="listitem">
+      <span class="s-label">Control accuracy</span>
+      <span class="s-value">±0.3 bar</span>
+      <span class="s-sub">closed-loop tyre pressure system</span>
+    </div>
+    <div class="sector" role="listitem">
+      <span class="s-label">Hybrid deployment</span>
+      <span class="s-value">350 kW</span>
+      <span class="s-sub">MGU-K torque overlay, 2026 F1 regs</span>
+    </div>
+  </div>
+
+  <div class="chip-row">
+    <span class="chip"><span class="dot"></span>Available October 2026 — full UK working rights, no sponsorship required</span>
+    <span class="chip ip">Patent pending · IN20254105002</span>
+  </div>
+
+  <div class="cta-row">
+    <a class="btn btn-primary" href="#contact">Get in touch</a>
+    <button class="btn btn-ghost" id="vcardBtn" type="button">Save contact card</button>
+  </div>
+</header>
+
+<main>
+
+<section class="section wrap reveal" id="about">
+  <div class="sec-head">
+    <span class="sec-kicker">01</span>
+    <h2>About me</h2>
+    <span class="rule"></span>
+  </div>
+  <div class="prose">
+    <p>I build the tools that turn data into lap time. My focus is <strong>vehicle dynamics and simulation</strong>: constructing lap time models, correlating them against real telemetry, and translating driver behaviour into concrete setup actions.</p>
+    <p>That thread runs through everything on this page — a dissertation simulating <strong>2026-regulation Formula 1 cars</strong> in AVL VSM, a Python platform that fingerprints driving style from racing telemetry and proposes setup changes by Bayesian optimisation, and a <strong>patent-pending tyre pressure control system</strong> that closed the loop on real hardware.</p>
+    <p>Away from the desk: accredited Motorsport UK marshal, sim racer on a G923 rig, go-karting, and Formula 1 technical analysis.</p>
+  </div>
+  <div class="now-card">
+    <span class="s-label">Currently</span>
+    <p>Completing my MSc dissertation on F1 vehicle dynamics optimisation at Oxford Brookes, and seeking Vehicle Dynamics, Simulation, Race and Performance Engineering roles starting October 2026.</p>
+  </div>
+</section>
+
+<section class="section wrap reveal" id="projects">
+  <div class="sec-head">
+    <span class="sec-kicker">02</span>
+    <h2>Projects</h2>
+    <span class="rule"></span>
+  </div>
+
+  <article class="proj">
+    <div class="proj-top">
+      <span class="tag purple">MSc dissertation</span>
+      <span class="tag live">In progress</span>
+    </div>
+    <h3>F1 Vehicle Dynamics Optimisation</h3>
+    <p>Lap time simulation of 2026-regulation Formula 1 cars in AVL VSM, modelling active-aero X/Z mode switching and a 350&nbsp;kW MGU-K torque overlay. Validated against real telemetry through a FastF1 Python pipeline, targeting under 2% lap time error across Monaco, Silverstone and Spa. A machine-learning layer classifies driving style and links it to setup direction.</p>
+    <div class="metrics">
+      <span class="metric"><b>&lt;2%</b> lap time error target</span>
+      <span class="metric"><b>3</b> circuits validated</span>
+      <span class="metric"><b>k=5</b> cross-validation</span>
+    </div>
+    <p class="stack">AVL VSM · FastF1 · Python · XGBoost · K-means · SHAP</p>
+  </article>
+
+  <article class="proj">
+    <div class="proj-top">
+      <span class="tag live">Active development</span>
+      <span class="tag">Personal platform</span>
+    </div>
+    <h3>ACC Driver Fingerprinting &amp; Setup Optimisation</h3>
+    <p>End-to-end Python platform built on MoTeC exports from Assetto Corsa Competizione. It detects corners, extracts per-corner driver features — braking aggression, trail-braking overlap, throttle pickup, lateral&nbsp;G — and proposes the next setup change by Bayesian optimisation, tested one factor at a time on a G923 rig.</p>
+    <div class="metrics">
+      <span class="metric"><b>Per-corner</b> driver fingerprinting</span>
+      <span class="metric"><b>Bayesian</b> next-setup proposals</span>
+      <span class="metric"><b>OFAT</b> test methodology</span>
+    </div>
+    <p class="stack">Python · MoTeC · Bayesian optimisation · Signal processing</p>
+  </article>
+
+  <article class="proj">
+    <div class="proj-top">
+      <span class="tag purple">Patent pending · IN20254105002</span>
+      <span class="tag">Team lead — 4 members</span>
+    </div>
+    <h3>Smart Tyre Pressure Control System</h3>
+    <p>Closed-loop tyre pressure control from real-time sensor data, integrating a pneumatic valve with an ECU to hold pressures within ±0.3&nbsp;bar. Led a team of four from concept to functional prototype; industry validated, 2nd place at Technova 2023–24 and a KSCST grant winner.</p>
+    <div class="metrics">
+      <span class="metric"><b>±0.3 bar</b> control accuracy</span>
+      <span class="metric"><b>2nd place</b> Technova 2023–24</span>
+      <span class="metric"><b>Industry</b> validated</span>
+    </div>
+    <p class="stack">SolidWorks · Embedded control · Pneumatics · Sensor integration</p>
+  </article>
+</section>
+<section class="section wrap reveal" id="qualifications">
+  <div class="sec-head">
+    <span class="sec-kicker">03</span>
+    <h2>Qualifications</h2>
+    <span class="rule"></span>
+  </div>
+
+  <div class="edu">
+    <div class="edu-item">
+      <span class="edu-when">Sep 2025 — Sep 2026</span>
+      <h3>MSc Motorsport Engineering</h3>
+      <p class="edu-where">Oxford Brookes University, United Kingdom</p>
+      <p class="edu-note"><b>Predicted Distinction</b> — four Distinctions and two Merits across taught modules. Key modules: Advanced Vehicle Dynamics, Lap Time Simulation, Advanced Aerodynamics, Electric Vehicles, Composites &amp; Impact Modelling, Engineering Business Management.</p>
+    </div>
+    <div class="edu-item">
+      <span class="edu-when">Oct 2020 — Jun 2024</span>
+      <h3>BE Mechanical Engineering</h3>
+      <p class="edu-where">St Joseph Engineering College, India</p>
+      <p class="edu-note"><b>2:1 equivalent.</b> Relevant modules: Automobile Engineering, Finite Element Analysis, Fluid Mechanics, Machine Design. Elected class representative for all four years.</p>
+    </div>
+  </div>
+
+  <h3 class="subhead">Honours &amp; credentials</h3>
+  <ul class="honours">
+    <li><span><b>Indian patent pending</b> — Smart Tyre Pressure Control System <span class="mono">IN20254105002</span></span></li>
+    <li><span><b>2nd place, Technova 2023–24</b> &amp; KSCST grant winner</span></li>
+    <li><span><b>Motorsport UK Registered Marshal</b> (Accredited) <span class="mono">Nov 2025 — present</span></span></li>
+    <li><span><b>Course Representative</b>, MSc Motorsport Engineering — elected cohort liaison</span></li>
+    <li><span><b>SAEINDIA member</b> <span class="mono">Jun 2020 — present</span> · STEM education volunteer, 2022–24</span></li>
+  </ul>
+
+  <h3 class="subhead">Technical skills</h3>
+  <div class="skills">
+    <div class="skill-group">
+      <h4>Simulation &amp; analysis</h4>
+      <div class="skill-tags">
+        <span>AVL VSM</span><span>IPG CarMaker</span><span>Pacejka tyre modelling</span><span>MATLAB</span><span>Simulink</span><span>Star CCM+</span><span>Ansys</span><span>Hypermesh</span><span>LS-DYNA</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h4>Programming &amp; data</h4>
+      <div class="skill-tags">
+        <span>Python</span><span>FastF1</span><span>MoTeC processing</span><span>XGBoost</span><span>K-means</span><span>SHAP</span><span>Bayesian optimisation</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <h4>CAD &amp; design</h4>
+      <div class="skill-tags">
+        <span>SolidWorks</span><span>Siemens NX</span><span>CATIA</span><span>AutoCAD</span><span>Fusion 360</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section wrap reveal" id="contact">
+  <div class="sec-head">
+    <span class="sec-kicker">04</span>
+    <h2>Contact</h2>
+    <span class="rule"></span>
+  </div>
+
+  <dl class="contact-grid">
+    <div class="c-row">
+      <dt>Email</dt>
+      <dd><a href="mailto:er.anshulrshetty@gmail.com">er.anshulrshetty@gmail.com</a></dd>
+    </div>
+    <div class="c-row">
+      <dt>Phone</dt>
+      <dd><a href="tel:+447584979799">+44 (0)7584 979799</a></dd>
+    </div>
+    <div class="c-row">
+      <dt>LinkedIn</dt>
+      <dd><a href="https://linkedin.com/in/anshulrshetty" target="_blank" rel="noopener">linkedin.com/in/anshulrshetty</a></dd>
+    </div>
+    <div class="c-row">
+      <dt>Base</dt>
+      <dd>United Kingdom</dd>
+    </div>
+    <div class="c-row">
+      <dt>Available</dt>
+      <dd>October 2026 — full UK working rights via the Graduate visa route, no employer sponsorship required</dd>
+    </div>
+  </dl>
+
+  <div class="cta-row">
+    <a class="btn btn-primary" href="mailto:er.anshulrshetty@gmail.com?subject=Motorsport%20engineering%20opportunity">Email me</a>
+    <button class="btn btn-ghost" id="vcardBtn2" type="button">Save contact card</button>
+    <a class="btn btn-ghost" href="https://linkedin.com/in/anshulrshetty" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <p>© <span id="year"></span> Anshul R. Shetty</p>
+    <p>Vehicle dynamics · Simulation · Race engineering</p>
+  </div>
+</footer>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Anshul R. Shetty",
+  "jobTitle": "Motorsport Engineer — Vehicle Dynamics & Simulation",
+  "alumniOf": [
+    {"@type": "CollegeOrUniversity", "name": "Oxford Brookes University"},
+    {"@type": "CollegeOrUniversity", "name": "St Joseph Engineering College"}
+  ],
+  "email": "mailto:er.anshulrshetty@gmail.com",
+  "telephone": "+447584979799",
+  "sameAs": ["https://linkedin.com/in/anshulrshetty"],
+  "knowsAbout": ["Vehicle dynamics", "Lap time simulation", "Tyre modelling", "Telemetry analysis", "Race engineering"]
+}
+</script>
+
+<script>
+document.getElementById('year').textContent = new Date().getFullYear();
+
+// Save contact card (.vcf) — edit details here if anything changes
+const VCARD = [
+  'BEGIN:VCARD',
+  'VERSION:3.0',
+  'N:Shetty;Anshul;R.;;',
+  'FN:Anshul R. Shetty',
+  'TITLE:Motorsport Engineer - Vehicle Dynamics & Simulation',
+  'EMAIL;TYPE=INTERNET:er.anshulrshetty@gmail.com',
+  'TEL;TYPE=CELL:+447584979799',
+  'URL:https://linkedin.com/in/anshulrshetty',
+  'NOTE:MSc Motorsport Engineering, Oxford Brookes University. Available October 2026 with full UK working rights, no sponsorship required.',
+  'END:VCARD'
+].join('\r\n');
+
+function downloadVcard(){
+  const blob = new Blob([VCARD], {type:'text/vcard'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Anshul_R_Shetty.vcf';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+['vcardBtn','vcardBtn2'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', downloadVcard);
+});
+
+// Scroll reveal
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, {threshold: 0.08});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+
+</body>
+</html>
