@@ -329,7 +329,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
   </div>
   <div class="prose">
     <p>I build the tools that turn data into lap time. My focus is <strong>vehicle dynamics and simulation</strong>: constructing lap time models, correlating them against real telemetry, and translating driver behaviour into concrete setup actions.</p>
-    <p>That thread runs through everything on this page - a dissertation simulating <strong>2026-regulation Formula 1 cars</strong> in AVL VSM, a Python platform that fingerprints driving style from racing telemetry and proposes setup changes by Bayesian optimisation, and a <strong>patent-pending tyre pressure control system</strong> that closed the loop on real hardware.</p>
+    <p>That thread runs through everything on this page - a dissertation simulating <strong>2026-regulation Formula 1 cars</strong> in AVL VSM, <strong>PITWALL</strong>, a desktop application that fingerprints driving style from ACC telemetry and proposes setup changes by Bayesian optimisation, and a <strong>patent-pending tyre pressure control system</strong> that closed the loop on real hardware.</p>
     <p>Away from the desk: accredited Motorsport UK marshal, sim racer on a G923 rig, go-karting, and Formula 1 technical analysis.</p>
   </div>
   <div class="now-card">
@@ -362,17 +362,19 @@ footer{border-top:1px solid var(--line);padding:34px 0 44px}
 
   <article class="proj">
     <div class="proj-top">
+      <span class="tag purple">v0.3.1 - functional prototype</span>
+      <span class="tag">Windows &amp; macOS desktop app</span>
       <span class="tag live">Active development</span>
-      <span class="tag">Personal platform</span>
     </div>
-    <h3>ACC Driver Fingerprinting &amp; Setup Optimisation</h3>
-    <p>End-to-end Python platform built on MoTeC exports from Assetto Corsa Competizione. It detects corners, extracts per-corner driver features - braking aggression, trail-braking overlap, throttle pickup, lateral&nbsp;G - and proposes the next setup change by Bayesian optimisation, tested one factor at a time on a G923 rig.</p>
+    <h3>PITWALL - Driver-Specific Setup Optimisation</h3>
+    <p>A telemetry-driven race engineering platform for Assetto Corsa Competizione. It learns how a driver actually drives - trail-brake fraction, time to full throttle, steering activity, exit commitment, measured per corner speed band - then runs one-factor-at-a-time setup experiments and a Bayesian recommender that proposes the next highest-information test, with a confidence interval attached to every prediction.</p>
+    <p>Nine views take a session from ingestion through to recommendations, including setup transcription that mirrors ACC's own six-tab setup screen so every lap is traceable back to its configuration. Ingestion is built for real telemetry rather than clean samples: native MoTeC binary telemetry and i2 CSV exports through one pipeline, automatic unit detection, multi-rate channel resampling, and a truncation guard. Commissioned on real ACC stints (Aston Martin V8 Vantage GT3, Silverstone GP) and processed through both export formats to confirm the driver fingerprint agrees across them, which is the real test of the feature code.</p>
     <div class="metrics">
-      <span class="metric"><b>Per-corner</b> driver fingerprinting</span>
-      <span class="metric"><b>Bayesian</b> next-setup proposals</span>
-      <span class="metric"><b>OFAT</b> test methodology</span>
+      <span class="metric"><b>217</b> corner observations, single-driver validation</span>
+      <span class="metric"><b>55</b> telemetry channels parsed</span>
+      <span class="metric"><b>&lt;0.01</b> cross-format feature delta</span>
     </div>
-    <p class="stack">Python · MoTeC · Bayesian optimisation · Signal processing</p>
+    <p class="stack">Python · PySide6 · NumPy / pandas · scikit-learn · Bayesian optimisation · PyInstaller + GitHub Actions CI</p>
   </article>
 
   <article class="proj">
